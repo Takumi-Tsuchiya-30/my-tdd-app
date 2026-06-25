@@ -41,6 +41,6 @@ function App() {
       <div>3つ目: {num3}</div>
     </div>
   );
-
+}
 
 export default App;
