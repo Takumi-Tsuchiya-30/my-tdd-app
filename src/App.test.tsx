@@ -1,22 +1,39 @@
-import { render, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import App from './App'; // 👈 上で作ったAppを呼び出す
+import { render, fireEvent, cleanup, within } from '@testing-library/react';
+import { afterEach, describe, it, expect } from 'vitest';
+import App from './App';
 
-describe('画面のテスト', () => {
-  it('入力欄に数字を入れたら、画面の文字も変わること', () => {
-    // 1. 画面を映し出す
+afterEach(() => {
+  cleanup();
+});
+
+describe('App', () => {
+  it('1つ目と2つ目の値を足して3つ目に表示する', () => {
+    const { getAllByRole, getByRole } = render(<App />);
+    const inputs = getAllByRole('spinbutton');
+    const input1 = inputs[0] as HTMLInputElement;
+    const input2 = inputs[1] as HTMLInputElement;
+    const sumInput = inputs[2] as HTMLInputElement;
+    const button = getByRole('button', { name: /合計する/ });
+
+    fireEvent.change(input1, { target: { value: '3' } });
+    fireEvent.change(input2, { target: { value: '7' } });
+    fireEvent.click(button);
+
+    expect(sumInput.value).toBe('10');
+  });
+
+  it('空白は0扱いになる', () => {
     const { container } = render(<App />);
-    
-    // 2. 入力欄と、文字を出す場所を探す
-    const input = container.querySelector('input');
-    const span = container.querySelector('span');
+    const inputs = container.querySelectorAll('input');
+    const button = within(container).getByRole('button', { name: /合計する/ });
 
-    // 3. 入力欄に「5」と打ち込む
-    if (input) {
-      fireEvent.change(input, { target: { value: '5' } });
-    }
+    const input1 = inputs[0] as HTMLInputElement;
+    const input2 = inputs[1] as HTMLInputElement;
+    const sumInput = inputs[2] as HTMLInputElement;
+    fireEvent.change(input1, { target: { value: '' } });
+    fireEvent.change(input2, { target: { value: '5' } });
+    fireEvent.click(button);
 
-    // 4. 画面の文字が「5」になったかチェック！
-    expect(span?.textContent).toBe('5');
+    expect(sumInput.value).toBe('5');
   });
 });
