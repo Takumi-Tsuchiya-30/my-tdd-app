@@ -2,10 +2,15 @@ import express from "express";
 import cors from "cors";
 import { Pool } from "pg";
 
+//------------------------------------
+// Expressアプリケーションの作成
 const app = express();
 app.use(cors());
 app.use(express.json());
+//------------------------------------
 
+//------------------------------------
+// PostgreSQLの接続設定
 const pool = new Pool({
   host: "localhost",
   port: 5432,
@@ -13,13 +18,17 @@ const pool = new Pool({
   password: "postgres",
   database: "ProductManagement",
 });
+//------------------------------------
 
+//------------------------------------
+// ルートエンドポイントの設定
 app.get("/", (req, res) => {
   res.send("Hello");
 });
+//------------------------------------
 
-
-
+//------------------------------------
+// 商品登録のAPIエンドポイント
 app.post("/api/insert", async (req, res) => {
   try {
     // リクエストボディからデータを取得（idを自動生成）
@@ -38,8 +47,30 @@ app.post("/api/insert", async (req, res) => {
     res.status(500).json({ ok: false, error: "DB挿入エラー" });
   }
 });
+//------------------------------------
 
-app.listen(3001, () => {
-  console.log("API server running on http:purchase_store//localhost:3001");
+//------------------------------------
+// 購入店の一覧を取得するAPIエンドポイント
+app.get("/api/stores", async (_req, res) => {
+  try {
+    // データベースから購入店の一覧を取得する処理
+    const result = await pool.query(
+        // 購入店の一覧を取得するSQLクエリ
+      "SELECT DISTINCT store_name FROM store_master ORDER BY store_name ASC"
+    );
+    // 取得した購入店の一覧をレスポンスとして返す
+    res.json(result.rows.map((row) => row.store_name));
+  } catch (error) {
+
+// エラーが発生した場合の処理
+    res.status(500).json({ error: "取得失敗" });
+  }
 });
+//------------------------------------
 
+//------------------------------------
+// サーバーを起動する
+app.listen(3001, () => {
+  console.log("API server running on http://localhost:3001/api/stores");
+});
+//------------------------------------

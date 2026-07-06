@@ -182,3 +182,58 @@
     border-right-color: var(--border);
   }
 }
+
+/* 追加したスタイル */
+.input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+label {
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}
+
+input, select {
+  padding: 6px 8px;
+  width: 180px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Submit-button {
+  padding: 4px 24px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.global-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  border-top: 1px solid #ddd;
+  background: white;
+}
+
+.page-content {
+  flex: 1;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
